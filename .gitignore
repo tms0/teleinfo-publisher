@@ -1,0 +1,4 @@
+data/.config.json*
+data/.flows.json*
+data/package.json
+.env
