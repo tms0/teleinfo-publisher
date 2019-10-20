@@ -50,11 +50,11 @@
         "z": "fbad585e.ea1a98",
         "name": "/dev/ttyAMA0",
         "serial": "b4b72d3d.bf51c",
-        "x": 120,
+        "x": 90,
         "y": 200,
         "wires": [
             [
-                "ae8838a2.5a7908"
+                "f3163ffd.83225"
             ]
         ]
     },
@@ -63,10 +63,10 @@
         "type": "function",
         "z": "fbad585e.ea1a98",
         "name": "toJSON",
-        "func": "function computeChecksum(etiquette, valeur) {\n    // Calcul de la checksum sur ce qu'on a reçu, on balaye tous les caractères\n\tvar sum = 32;\n  \tfor (i = 0; i < etiquette.length; i++) sum += etiquette.charCodeAt(i);\n  \tfor (i = 0; i < valeur.length; i++) sum += valeur.charCodeAt(i);\n \tsum = ((sum % 256) & 63) + 32;\n \treturn String.fromCharCode(sum);\n}\n\nvar payload = {};\n \n// Enlever les codes début et fin de trame\nvar lines = msg.payload.toString().replace(\"\\u0002\\n\", \"\").replace(\"\\r\\u0003\", \"\");\n \n// Récupérer chaque ligne une à une\nlines.split(\"\\r\\n\").forEach(line => {\n\n  \tnode.debug(`Ligne à décoder : ${line}`);\n  \t\n  \tvar groups = line.match(/^([^ ]+)\\s([^ ]+)\\s(.)$/i);\n  \t\n  \tif (groups === null) {\n  \t    node.warn(`Impossible de décoder la ligne '${line}'`);\n  \t} else {\n      \tvar etiquette = groups[1];\n      \tvar valeur = groups[2];\n      \tvar checksum = groups[3];\n      \t\n        var computedChecksum = computeChecksum(etiquette, valeur);\n     \n        // Checksum correcte ?\n        if (computedChecksum === checksum) {\n            \n            // Suppression des points en fin de chaîne (pour tout ce qui est période et option tarifaire)\n            valeur = valeur.replace(/\\.+$/g, '');\n    \n            node.debug(`Etiquette : ${etiquette} / Valeur : ${valeur}`);\n     \n            payload[etiquette] = valeur;\n    \t} else {\n    \t\tnode.warn(`Mauvais checksum pour la ligne '${line}'`);\n    \t}\n  \t}\n})\n\nreturn [{ payload }];",
+        "func": "function computeChecksum(etiquette, valeur) {\n    // Calcul de la checksum sur ce qu'on a reçu, on balaye tous les caractères\n\tvar sum = 32;\n  \tfor (i = 0; i < etiquette.length; i++) sum += etiquette.charCodeAt(i);\n  \tfor (i = 0; i < valeur.length; i++) sum += valeur.charCodeAt(i);\n \tsum = ((sum % 256) & 63) + 32;\n \treturn String.fromCharCode(sum);\n}\n\nvar payload = {};\n \n// Enlever les codes début et fin de trame\nvar lines = msg.payload.toString().replace(\"\\u0002\\n\", \"\").replace(\"\\r\\u0003\", \"\");\n \n// Récupérer chaque ligne une à une\nlines.split(\"\\r\\n\").forEach(line => {\n\n  \tnode.debug(`Ligne à décoder : ${line}`);\n  \t\n  \tvar groups = line.match(/^([^ ]+)\\s([^ ]+)\\s(.)$/i);\n  \t\n  \tif (groups === null) {\n  \t    node.warn(`Impossible de décoder la ligne '${line}'`);\n  \t} else {\n      \tvar etiquette = groups[1];\n      \tvar valeur = groups[2];\n      \tvar checksum = groups[3];\n      \t\n        var computedChecksum = computeChecksum(etiquette, valeur);\n     \n        // Checksum correcte ?\n        if (computedChecksum === checksum) {\n            \n            // Suppression des points en fin de chaîne (pour tout ce qui est période et option tarifaire)\n            valeur = valeur.replace(/\\.+$/g, '');\n            \n            // Si c'est une chaîne numérique, on la transforme en int\n            if (valeur.match(/^\\d+$/)) {\n                valeur = parseInt(valeur);\n            }\n    \n            node.debug(`Etiquette : ${etiquette} / Valeur : ${valeur}`);\n     \n            payload[etiquette] = valeur;\n    \t} else {\n    \t\tnode.warn(`Mauvais checksum pour la ligne '${line}'`);\n    \t}\n  \t}\n})\n\nreturn [{ payload }];",
         "outputs": 1,
         "noerr": 0,
-        "x": 340,
+        "x": 440,
         "y": 200,
         "wires": [
             [
@@ -86,8 +86,8 @@
         "tostatus": false,
         "complete": "payload",
         "targetType": "msg",
-        "x": 500,
-        "y": 60,
+        "x": 580,
+        "y": 120,
         "wires": []
     },
     {
@@ -99,8 +99,31 @@
         "qos": "",
         "retain": "",
         "broker": "cb79d330.24e94",
-        "x": 560,
+        "x": 600,
         "y": 200,
         "wires": []
+    },
+    {
+        "id": "f3163ffd.83225",
+        "type": "delay",
+        "z": "fbad585e.ea1a98",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "minute",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "x": 270,
+        "y": 200,
+        "wires": [
+            [
+                "ae8838a2.5a7908"
+            ]
+        ]
     }
 ]
