@@ -15,7 +15,7 @@
         "databits": "7",
         "parity": "even",
         "stopbits": "1",
-        "waitfor": "",
+        "waitfor": "0x2",
         "newline": "0x3",
         "bin": "false",
         "out": "char",
