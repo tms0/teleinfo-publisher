@@ -6,8 +6,10 @@ services:
     restart: always
     group_add:
       - dialout
+      - gpio
     devices:
       - "/dev/ttyAMA0:/dev/ttyAMA0"
+      - "/dev/gpiomem:/dev/gpiomem"
     ports:
       - "1880:1880"
     volumes:
