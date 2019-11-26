@@ -9,6 +9,8 @@ Ce code est destiné à touner sur un [Raspberry Pi](https://www.raspberrypi.org
 
 Tous les crédits vont à Charles Hallard (http://hallard.me), je n'ai fait que reprendre son travail pour l'adapter à mes besoins.
 
+NB : Actuellement, seul le mode "historique" est géré (compteurs non Linky ou Linky en mode historique), n'ayant pas de Linky en mode standard en ma possession (cela devrait arriver début 2020).
+
 ## Pré-requis
 
 - La téléinformation activée sur le compteur
