@@ -28,7 +28,7 @@
         "z": "",
         "name": "MQTT Broker",
         "broker": "${MQTT_SERVER}",
-        "port": "1883",
+        "port": "${MQTT_PORT}",
         "clientid": "",
         "usetls": false,
         "compatmode": false,
