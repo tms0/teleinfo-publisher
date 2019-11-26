@@ -3,22 +3,26 @@
 Ce projet fait partie d'un projet global de suivi en temps réel de la consommation et de la production d'électricité de mon domicile.
 
 Cette partie s'intéresse à la récupération des données d'un compteur Enedis (Linky ou autre compteur moderne) en utilisant la Télé-information client (TIC).
-Ces données sont simplement formatées en JSON et envoyées sur un broker MQTT, leur exploitation est réalisée par l'autre partie du projet.
+Ces données sont simplement formatées en JSON et envoyées sur un [broker MQTT](https://fr.wikipedia.org/wiki/MQTT), leur exploitation est réalisée par l'autre partie du projet.
 
-Ce code est destiné à touner sur un Raspberry Pi avec la carte d'extension PiTInfo. La récupération et la transmission de la téléinformation est réalisée avec Node-RED.
+Ce code est destiné à touner sur un [Raspberry Pi](https://www.raspberrypi.org/) avec la carte d'extension [PiTInfo](https://hallard.me/pitinfov12-light/). La récupération et la transmission de la téléinformation est réalisée avec [Node-RED](https://nodered.org/).
 
 Tous les crédits vont à Charles Hallard (http://hallard.me), je n'ai fait que reprendre son travail pour l'adapter à mes besoins.
 
 ## Pré-requis
 
 - La téléinformation activée sur le compteur
-- Un Raspberry Pi avec le système d'exploitation Raspbian
-- La carte d'extension PiTInfo
-- Un broker MQTT (mosquitto par exemple)
+- Un [Raspberry Pi](https://www.raspberrypi.org) avec le système d'exploitation [Raspbian](https://www.raspberrypi.org/downloads/raspbian/)
+- La carte d'extension [PiTInfo](https://www.tindie.com/products/Hallard/pitinfo/)
+- Un broker MQTT ([mosquitto](https://mosquitto.org/download/) par exemple)
 
 ## Installation
 
-- Installer les dépendances nécessaires : git, docker et docker-compose
+- Installer les dépendances nécessaires :
+  ```
+  $ curl -sSL https://get.docker.com | sh
+  $ sudo apt install git docker-compose
+  ```
 - Récupérer le projet avec Git : `git clone https://github.com/tms0/energy-monitoring-teleinfo.git`
 - Modifier le fichier `.env-sample` pour renseigner les valeurs spécifiques à votre environnement et le renommer en `.env`
 
@@ -54,3 +58,8 @@ Exemple de message avec la téléinformation "historique" du compteur Linky :
    "MOTDETAT":"000000"
 }
 ```
+
+## Documentation télé-information client
+
+- Sorties de télé-information client des appareils de comptage électroniques utilisés par Enedis : https://www.enedis.fr/sites/default/files/Enedis-NOI-CPT_02E.pdf
+- Sorties de télé-information client des appareils de comptage Linky utilisés en généralisation par Enedis : https://www.enedis.fr/sites/default/files/Enedis-NOI-CPT_54E.pdf
