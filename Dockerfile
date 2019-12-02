@@ -1,4 +1,6 @@
-FROM nodered/node-red:1.0.1-12-arm32v6
+ARG NODERED_IMAGE_TAG
+
+FROM nodered/node-red:${NODERED_IMAGE_TAG}
 
 # Installation du nécessaire pour utiliser le port série et les ports GPIO
 

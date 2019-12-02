@@ -3,6 +3,8 @@ services:
   nodered:
     build:
       context: .
+      args:
+        - NODERED_IMAGE_TAG
     restart: always
     group_add:
       - dialout
@@ -16,3 +18,4 @@ services:
       - ./data:/data
     environment:
       - MQTT_SERVER
+      - MQTT_PORT
