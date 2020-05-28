@@ -1,6 +1,6 @@
 # Energie monitoring - Publication de la téléinformation
 
-Ce projet fait partie d'un projet global de suivi en temps réel de la consommation et de la production d'électricité de mon domicile.
+Ce projet fait partie d'un projet global de [suivi en temps réel de la consommation et de la production d'électricité de mon domicile](https://github.com/tms0/energy-monitoring).
 
 Cette partie s'intéresse à la récupération des données d'un compteur Enedis (Linky ou autre compteur moderne) en utilisant la Télé-information client (TIC).
 Ces données sont simplement formatées en JSON et envoyées sur un [broker MQTT](https://fr.wikipedia.org/wiki/MQTT), leur exploitation est réalisée par l'autre partie du projet.
