@@ -1,15 +1,11 @@
 # Energie monitoring - Publication de la téléinformation
 
-Ce projet fait partie d'un projet global de [suivi en temps réel de la consommation et de la production d'électricité de mon domicile](https://github.com/tms0/energy-monitoring).
-
-Cette partie s'intéresse à la récupération des données d'un compteur Enedis (Linky ou autre compteur moderne) en utilisant la Télé-information client (TIC).
-Ces données sont simplement formatées en JSON et envoyées sur un [broker MQTT](https://fr.wikipedia.org/wiki/MQTT), leur exploitation est réalisée par l'autre partie du projet.
-
+Ce projet permet de récupérer les données d'un compteur Enedis (Linky ou autre compteur moderne) en utilisant la Télé-information client (TIC), et de les publier au format JSON sur un [broker MQTT](https://fr.wikipedia.org/wiki/MQTT).
 Ce code est destiné à touner sur un [Raspberry Pi](https://www.raspberrypi.org/) avec la carte d'extension [PiTInfo](https://hallard.me/pitinfov12-light/). La récupération et la transmission de la téléinformation est réalisée avec [Node-RED](https://nodered.org/).
 
 Tous les crédits vont à Charles Hallard (http://hallard.me), je n'ai fait que reprendre son travail pour l'adapter à mes besoins.
 
-NB : Actuellement, seul le mode "historique" est géré (compteurs non Linky ou Linky en mode historique), n'ayant pas de Linky en mode standard en ma possession (cela devrait arriver début 2020).
+Note : ce projet fait partie d'un projet global de [suivi en temps réel de la consommation et de la production d'électricité de mon domicile](https://github.com/tms0/energy-monitoring).
 
 ## Pré-requis
 

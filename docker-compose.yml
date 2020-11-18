@@ -17,5 +17,7 @@ services:
     volumes:
       - ./data:/data
     environment:
+      - MODE_TIC
+      - SERIAL_BAUDRATE
       - MQTT_SERVER
       - MQTT_PORT

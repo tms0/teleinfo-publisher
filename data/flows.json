@@ -10,7 +10,7 @@
         "id": "b4b72d3d.bf51c",
         "type": "serial-port",
         "serialport": "/dev/ttyAMA0",
-        "serialbaud": "1200",
+        "serialbaud": "${SERIAL_BAUDRATE}",
         "databits": "7",
         "parity": "even",
         "stopbits": "1",
@@ -48,8 +48,8 @@
         "z": "fbad585e.ea1a98",
         "name": "/dev/ttyAMA0",
         "serial": "b4b72d3d.bf51c",
-        "x": 90,
-        "y": 200,
+        "x": 150,
+        "y": 180,
         "wires": [
             [
                 "f3163ffd.83225",
@@ -61,16 +61,18 @@
         "id": "ae8838a2.5a7908",
         "type": "function",
         "z": "fbad585e.ea1a98",
-        "name": "toJSON",
+        "name": "historiqueToJSON",
         "func": "function computeChecksum(etiquette, valeur) {\n    // Calcul de la checksum sur ce qu'on a reçu, on balaye tous les caractères\n\tvar sum = 32;\n  \tfor (i = 0; i < etiquette.length; i++) sum += etiquette.charCodeAt(i);\n  \tfor (i = 0; i < valeur.length; i++) sum += valeur.charCodeAt(i);\n \tsum = ((sum % 256) & 63) + 32;\n \treturn String.fromCharCode(sum);\n}\n\nvar payload = {\n    timestamp: new Date().getTime()\n};\n \n// Enlever les codes début et fin de trame\nvar lines = msg.payload.toString().replace(\"\\u0002\\n\", \"\").replace(\"\\r\\u0003\", \"\");\n \n// Récupérer chaque ligne une à une\nlines.split(\"\\r\\n\").forEach(line => {\n\n  \tnode.debug(`Ligne à décoder : ${line}`);\n  \t\n  \tvar groups = line.match(/^([^ ]+)\\s([^ ]+)\\s(.)$/i);\n  \t\n  \tif (groups === null) {\n  \t    node.warn(`Impossible de décoder la ligne '${line}'`);\n  \t} else {\n      \tvar etiquette = groups[1];\n      \tvar valeur = groups[2];\n      \tvar checksum = groups[3];\n      \t\n        var computedChecksum = computeChecksum(etiquette, valeur);\n     \n        // Checksum correcte ?\n        if (computedChecksum === checksum) {\n            \n            // Suppression des points en fin de chaîne (pour tout ce qui est période et option tarifaire)\n            valeur = valeur.replace(/\\.+$/g, '');\n            \n            // Si c'est une chaîne numérique, on la transforme en int\n            if (valeur.match(/^\\d+$/)) {\n                valeur = parseInt(valeur);\n            }\n    \n            node.debug(`Etiquette : ${etiquette} / Valeur : ${valeur}`);\n     \n            payload[etiquette] = valeur;\n    \t} else {\n    \t\tnode.warn(`Mauvais checksum pour la ligne '${line}'`);\n    \t}\n  \t}\n})\n\nreturn [{ payload }];",
         "outputs": 1,
         "noerr": 0,
-        "x": 460,
-        "y": 200,
+        "initialize": "",
+        "finalize": "",
+        "x": 690,
+        "y": 220,
         "wires": [
             [
-                "f3929d13.84137",
-                "f9382bc0.1f80f8"
+                "f9382bc0.1f80f8",
+                "f3929d13.84137"
             ]
         ]
     },
@@ -85,8 +87,8 @@
         "tostatus": false,
         "complete": "payload",
         "targetType": "msg",
-        "x": 600,
-        "y": 120,
+        "x": 1020,
+        "y": 80,
         "wires": []
     },
     {
@@ -98,8 +100,8 @@
         "qos": "1",
         "retain": "",
         "broker": "cb79d330.24e94",
-        "x": 620,
-        "y": 200,
+        "x": 1020,
+        "y": 180,
         "wires": []
     },
     {
@@ -117,11 +119,11 @@
         "randomLast": "5",
         "randomUnits": "seconds",
         "drop": true,
-        "x": 290,
-        "y": 200,
+        "x": 330,
+        "y": 180,
         "wires": [
             [
-                "ae8838a2.5a7908"
+                "ddca2726.3c59e8"
             ]
         ]
     },
@@ -135,8 +137,8 @@
         "level": "0",
         "freq": "",
         "out": "out",
-        "x": 450,
-        "y": 280,
+        "x": 490,
+        "y": 300,
         "wires": []
     },
     {
@@ -154,11 +156,63 @@
         "reset": "",
         "bytopic": "all",
         "outputs": 1,
-        "x": 280,
-        "y": 280,
+        "x": 320,
+        "y": 300,
         "wires": [
             [
                 "1dd738c9.3e6867"
+            ]
+        ]
+    },
+    {
+        "id": "8e090ef4.33024",
+        "type": "function",
+        "z": "fbad585e.ea1a98",
+        "name": "standardToJSON",
+        "func": "function computeChecksum(chars) {\n    var sum = Array.from(chars).reduce((acc, curr) => acc + curr.charCodeAt(), 0);\n  \treturn String.fromCharCode((sum & 0x3F) + 0x20);\n}\n\nvar payload = {\n    timestamp: new Date().getTime()\n};\n\n// Enlever les codes début et fin de trame\nvar lines = msg.payload.toString().replace(\"\\u0002\\n\", \"\").replace(\"\\r\\u0003\", \"\");\n\n// Récupérer chaque ligne une à une\nlines.split(\"\\r\\n\").forEach(line => {\n\n  \tnode.debug(`Ligne à décoder : ${line}`);\n\n  \tvar groups = line.match(/^(.+?)\\t(\\w\\d{12})?\\t?(.+)\\t(.)$/i);\n\n  \tif (groups === null) {\n  \t    node.warn(`Impossible de décoder la ligne '${line}'`);\n  \t} else {\n     \tvar etiquette = groups[1];\n     \tvar horodatage = groups[2];\n     \tvar valeur = groups[3];\n      \tvar checksum = groups[4];\n\n        var computedChecksum = computeChecksum(line.slice(0, -1));\n\n        // Checksum correcte ?\n        if (computedChecksum === checksum) {\n\n            // Suppression des espaces devant et derrière\n            valeur = valeur.trim();\n\n            // Si c'est une chaîne numérique, on la transforme en int\n            if (valeur.match(/^\\d+$/)) {\n                valeur = parseInt(valeur);\n            }\n\n            node.debug(`Etiquette : ${etiquette} / Valeur : ${valeur}`);\n\n            payload[etiquette] = valeur;\n    \t} else {\n    \t\tnode.warn(`Mauvais checksum pour la ligne '${line}'`);\n    \t}\n  \t}\n})\n\nreturn [{ payload }];",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 690,
+        "y": 140,
+        "wires": [
+            [
+                "f3929d13.84137",
+                "f9382bc0.1f80f8"
+            ]
+        ]
+    },
+    {
+        "id": "ddca2726.3c59e8",
+        "type": "switch",
+        "z": "fbad585e.ea1a98",
+        "name": "",
+        "property": "MODE_TIC",
+        "propertyType": "env",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "STANDARD",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "HISTORIQUE",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 490,
+        "y": 180,
+        "wires": [
+            [
+                "8e090ef4.33024"
+            ],
+            [
+                "ae8838a2.5a7908"
             ]
         ]
     }
