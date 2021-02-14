@@ -21,7 +21,7 @@ jobs:
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v1
         with:
-          images: ghcr.io/colibris-xyz/nextcloud
+          images: ghcr.io/tms0/teleinfo-publisher
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
