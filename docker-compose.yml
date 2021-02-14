@@ -1,21 +1,14 @@
-version: '2'
+version: '2.4'
 services:
   nodered:
     build:
       context: .
-      args:
-        - NODERED_IMAGE_TAG
     restart: always
-    group_add:
-      - dialout
-      - gpio
     devices:
       - "/dev/ttyAMA0:/dev/ttyAMA0"
       - "/dev/gpiomem:/dev/gpiomem"
     ports:
       - "1880:1880"
-    volumes:
-      - ./data:/data
     environment:
       - MODE_TIC
       - SERIAL_BAUDRATE
