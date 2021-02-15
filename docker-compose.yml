@@ -1,8 +1,7 @@
 version: '2.4'
 services:
-  nodered:
-    build:
-      context: .
+  app:
+    image: ghcr.io/tms0/teleinfo-publisher:latest
     restart: always
     devices:
       - "/dev/ttyAMA0:/dev/ttyAMA0"
