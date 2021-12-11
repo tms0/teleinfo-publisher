@@ -4,7 +4,7 @@ FROM nodered/node-red:2.1.4-12
 
 USER root
 
-RUN apk add --no-cache py-pip python-dev \
+RUN apk add --no-cache py-pip python3-dev \
   && pip install RPi.GPIO \
   && addgroup --system --gid 997 gpio \
   && adduser node-red gpio \
