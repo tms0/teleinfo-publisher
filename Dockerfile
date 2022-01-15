@@ -4,8 +4,8 @@ FROM nodered/node-red:2.1.4-16
 
 USER root
 
-RUN apk add --no-cache py3-pip python3-dev \
-  && pip3 install RPi.GPIO \
+RUN apk add --no-cache python-dev py-pip \
+  && pip install RPi.GPIO \
   && addgroup --system --gid 997 gpio \
   && adduser node-red gpio \
   && adduser node-red dialout
