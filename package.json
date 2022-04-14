@@ -2,7 +2,7 @@
   "name": "teleinfo-publisher",
   "version": "0.0.1",
   "dependencies": {
-    "node-red-node-serialport": "1.0.1",
+    "node-red-node-serialport": "0.15.0",
     "node-red-node-pi-gpio": "2.0.3"
   }
 }
