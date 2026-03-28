@@ -1,4 +1,4 @@
-FROM nodered/node-red:2.2.3-16
+FROM nodered/node-red:3.1.15-16
 
 # Installation du nécessaire pour utiliser le port série et les ports GPIO
 
